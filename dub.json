@@ -1,0 +1,7 @@
+﻿{
+	"name": "stb",
+	"description": "stb bindings for D",
+
+	"authors": [ "Temtaime" ],
+	"license": "zlib",
+}

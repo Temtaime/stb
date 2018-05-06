@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="stb" />
+		<Option pch_mode="2" />
+		<Option compiler="msvc10" />
+		<Build>
+			<Target title="Release">
+				<Option output="$(PROJECT_NAME)" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="$(TEMP)/codeblocks/$(PROJECT_NAME)/release/" />
+				<Option type="2" />
+				<Option compiler="msvc10" />
+			</Target>
+			<Target title="Release x64">
+				<Option output="$(PROJECT_NAME)_x64" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="$(TEMP)/codeblocks/$(PROJECT_NAME)/release x64/" />
+				<Option type="2" />
+				<Option compiler="microsoft_visual_c_2010_x64" />
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="/MT" />
+			<Add option="/O2" />
+			<Add option="/DNDEBUG" />
+			<Add directory="src" />
+		</Compiler>
+		<Unit filename="src/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/stb.h" />
+		<Unit filename="src/stb_image.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
