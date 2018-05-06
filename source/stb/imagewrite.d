@@ -5,7 +5,7 @@ extern(C):
 
 alias stbi_write_func = void function(void* context, void* data, int size);
 
-__gshared
+__gshared extern
 {
 	int stbi_write_tga_with_rle;
 	int stbi_write_png_compression_level;

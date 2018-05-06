@@ -457,6 +457,29 @@ final class Image
 
 	inout
 	{
+		auto toMipmaps()
+		{
+			inout(Image)[] res = [ this ];
+
+			while(true)
+			{
+				auto im = res.back;
+
+				if(im.w == 1 && im.h == 1)
+				{
+					break;
+				}
+
+				auto
+						w = max(im.w / 2, 1),
+						h = max(im.h / 2, 1);
+
+				res ~= cast(inout(Image))resize(w, h);
+			}
+
+			return res;
+		}
+
 		ref opIndex(uint x, uint y)
 		{
 			return _data[y * _w + x];
@@ -499,7 +522,7 @@ ubyte* compress_for_stb_image_write(in ubyte* data, uint len, uint* resLen, int 
 {
 	import core.stdc.stdlib;
 
-	size_t dst = compressBound(len);
+	auto dst = compressBound(len);
 	auto res = cast(ubyte*)malloc(dst);
 
 	if(compress2(res, &dst, data, len, level) == Z_OK)
