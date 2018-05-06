@@ -4,4 +4,7 @@
 
 	"authors": [ "Temtaime" ],
 	"license": "zlib",
+
+	"libs-x86": [ "lib/stb" ],
+	"libs-x86_64": [ "lib/stb_x64" ],
 }
