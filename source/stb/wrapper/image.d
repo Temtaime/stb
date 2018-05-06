@@ -13,7 +13,14 @@ import
 		std.bitmanip,
 		std.exception,
 		std.algorithm,
-		core.stdc.string, etc.c.zlib, core.stdc.stdlib : malloc, free;
+
+		core.stdc.string,
+		etc.c.zlib,
+
+		stb,
+		stb.image,
+		stb.imagewrite,
+		stb.imageresize;
 
 
 struct Color
@@ -129,7 +136,7 @@ final class Image
 
 	this(in void[] data)
 	{
-		auto p = cast(Color*)stbi_load_from_memory(data.ptr, cast(uint)data.length, &_w, &_h, null, 4);
+		auto p = cast(Color*)stbi_load_from_memory(data.ptr, cast(uint)data.length, cast(int*)&_w, cast(int*)&_h, null, 4);
 		enforce(p, `unknown/corrupted image`);
 
 		_data = p[0.._w * _h].dup;
@@ -250,7 +257,7 @@ final class Image
 		auto resize(uint w, uint h)
 		{
 			auto res = new Image(w, h);
-			stbir_resize_uint8(_data.ptr, _w, _h, 0, res[].ptr, w, h, 0, 4);
+			stbir_resize_uint8(cast(ubyte*)_data.ptr, _w, _h, 0, cast(ubyte*)res[].ptr, w, h, 0, 4);
 			return res;
 		}
 
@@ -492,7 +499,7 @@ private extern(C):
 ubyte* compress_for_stb_image_write(in ubyte* data, uint len, uint* resLen, int level)
 {
 	size_t dst = compressBound(len);
-	auto res = cast(ubyte*)malloc(dst);
+	auto res = cast(ubyte*)stb__temp(null, 0, dst);
 
 	if(compress2(res, &dst, data, len, level) == Z_OK)
 	{
@@ -501,6 +508,6 @@ ubyte* compress_for_stb_image_write(in ubyte* data, uint len, uint* resLen, int 
 
 	}
 
-	free(res);
+	stb_tempfree(null, res);
 	return null;
 }
