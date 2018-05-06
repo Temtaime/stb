@@ -1,0 +1,8 @@
+.dub
+
+dub.selections.json
+
+*.depend
+*.layout
+
+*.sublime-*

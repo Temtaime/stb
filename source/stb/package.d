@@ -4,6 +4,13 @@ import core.stdc.stdarg;
 import core.stdc.stdio : FILE;
 
 
+auto stb_arrhead(T)(T** a)
+{
+	return cast(stb__arr*)a - 1;
+}
+
+extern(C):
+
 alias time_t = ulong;
 
 alias stb_compare_func = int function(void* a, void* b);
@@ -164,13 +171,6 @@ enum
 	stb_keep_yes,
 	stb_keep_if_different,
 }
-
-auto stb_arrhead(T)(T** a)
-{
-	return cast(stb__arr*)a - 1;
-}
-
-extern(C):
 
 __gshared extern
 {

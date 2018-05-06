@@ -3,7 +3,7 @@
 	"description": "stb bindings for D",
 
 	"authors": [ "Temtaime" ],
-	"license": "zlib",
+	"license": "mit",
 
 	"libs-x86": [ "$PACKAGE_DIR/lib/stb" ],
 	"libs-x86_64": [ "$PACKAGE_DIR/lib/stb_x64" ],
