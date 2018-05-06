@@ -5,6 +5,6 @@
 	"authors": [ "Temtaime" ],
 	"license": "zlib",
 
-	"libs-x86": [ "lib/stb" ],
-	"libs-x86_64": [ "lib/stb_x64" ],
+	"libs-x86": [ "$PACKAGE_DIR/lib/stb" ],
+	"libs-x86_64": [ "$PACKAGE_DIR/lib/stb_x64" ],
 }
