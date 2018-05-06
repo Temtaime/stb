@@ -17,7 +17,6 @@ import
 		core.stdc.string,
 		etc.c.zlib,
 
-		stb,
 		stb.image,
 		stb.imagewrite,
 		stb.imageresize;
@@ -498,16 +497,17 @@ private extern(C):
 
 ubyte* compress_for_stb_image_write(in ubyte* data, uint len, uint* resLen, int level)
 {
+	import core.stdc.stdlib;
+
 	size_t dst = compressBound(len);
-	auto res = cast(ubyte*)stb__temp(null, 0, dst);
+	auto res = cast(ubyte*)malloc(dst);
 
 	if(compress2(res, &dst, data, len, level) == Z_OK)
 	{
 		*resLen = cast(uint)dst;
 		return res;
-
 	}
 
-	stb_tempfree(null, res);
+	free(res);
 	return null;
 }

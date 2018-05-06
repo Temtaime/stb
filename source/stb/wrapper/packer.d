@@ -18,8 +18,8 @@ struct TexturePacker
 
 	auto process()
 	{
-		auto w = binarySearch(0, TEX_MAX, a => canPack(a, TEX_MAX) ? -1 : 1);
-		auto h = binarySearch(0, TEX_MAX, a => canPack(w, a) ? -1 : 1);
+		auto w = binarySearch(0, TEX_MAX,	a => canPack(a, a) ? -1 : 1);
+		auto h = binarySearch(0, w,			a => canPack(w, a) ? -1 : 1);
 
 		// call once more because binarySearch can do some extra failing tries
 		canPack(w, h);
