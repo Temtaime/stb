@@ -27,9 +27,10 @@
 			<Add option="/DNDEBUG" />
 			<Add directory="src" />
 		</Compiler>
-		<Unit filename="src/main.c">
+		<Unit filename="src/c libs.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="src/cpp libs.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

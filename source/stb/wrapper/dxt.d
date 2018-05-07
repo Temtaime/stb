@@ -23,8 +23,8 @@ auto dxtCompress(in Image im, bool isDxt5)
 			sz = isDxt5 ? 4 : 2,
 			line = (im.w + 3) / 4;
 
-	for(uint y; y < im.w; y += 4)
-	for(uint x; x < im.h; x += 4)
+	for(uint y; y < im.h; y += 4)
+	for(uint x; x < im.w; x += 4)
 	{
 		Color[4][4] block;
 
