@@ -25,12 +25,17 @@
 			<Add option="/MT" />
 			<Add option="/O2" />
 			<Add option="/DNDEBUG" />
+			<Add option="/DMINIZ_NO_ZLIB_APIS" />
+			<Add option="/DMINIZ_NO_ZLIB_COMPATIBLE_NAMES" />
 			<Add directory="src" />
 		</Compiler>
 		<Unit filename="src/c libs.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/cpp libs.cpp" />
+		<Unit filename="src/miniz.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />

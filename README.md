@@ -2,10 +2,11 @@
 
 ### About
 
-This library contains [stb](https://github.com/nothings/stb) and other small libraries bindings and wrappers for them for D.
+This library contains stb and other small libraries bindings and wrappers for them for D.
 
-* stb is a set of libraries written in C serves many purposes.
-* sts_vertex_cache_optimizer is a vertex cache optimization library.
+* [stb](https://github.com/nothings/stb) is a set of libraries written in C serves many purposes.
+* [sts_vertex_cache_optimizer](https://github.com/Sigkill79/sts) is a vertex cache optimization library.
+* [miniz](https://github.com/richgel999/miniz) zlib compression library with functions for zip archives.
 
 ### License
 
