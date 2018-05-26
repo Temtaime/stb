@@ -36,6 +36,9 @@
 		<Unit filename="src/miniz.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="src/sqlite3.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />
