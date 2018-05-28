@@ -5,6 +5,6 @@
 	"authors": [ "Temtaime" ],
 	"license": "mit",
 
-	"libs-x86": [ "$PACKAGE_DIR/lib/stb" ],
-	"libs-x86_64": [ "$PACKAGE_DIR/lib/stb_x64" ],
+	"libs-x86-windows": [ "$PACKAGE_DIR/lib/stb" ],
+	"libs-x86_64-windows": [ "$PACKAGE_DIR/lib/stb_x64" ],
 }
