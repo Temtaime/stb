@@ -78,15 +78,11 @@ package:
 
 				auto r = _res;
 
+				foreach(i, T; A)
 				{
-					uint idx;
-
-					foreach(i, T; A)
+					static if(isSomeString!T)
 					{
-						static if(isSomeString!T)
-						{
-							r[i] = r[i][0.._lens[idx++]].idup;
-						}
+						r[i] = r[i][0..*_lens[i]].idup;
 					}
 				}
 
@@ -101,24 +97,19 @@ package:
 				enforce(!mysql_stmt_store_result(stmt));
 
 				{
-					uint idx;
 					auto info = mysql_stmt_result_metadata(stmt);
 
 					foreach(i, ref v; _res)
 					{
-						alias isStr = isSomeString!(A[i]);
+						size_t* len;
 
-						static if(isStr)
+						static if(isSomeString!(A[i]))
 						{
+							_lens[i] = len = new size_t;
 							v.length = info.fields[i].max_length;
 						}
 
-						arr ~= self.makeBind(v);
-
-						static if(isStr)
-						{
-							arr.back.length = &_lens[idx++];
-						}
+						arr ~= self.makeBind(v, len);
 					}
 
 					mysql_free_result(info);
@@ -129,7 +120,7 @@ package:
 			}
 
 			Tuple!A _res;
-			size_t[Filter!(isSomeString, A).length] _lens;
+			size_t*[uint] _lens;
 			bool _hasRow;
 		}
 
@@ -178,7 +169,7 @@ package:
 	}
 
 private:
-	auto makeBind(T)(ref T v)
+	auto makeBind(T)(ref T v, size_t* len = null)
 	{
 		MYSQL_BIND b;
 
@@ -207,6 +198,7 @@ private:
 		}
 		else static if(isSomeString!T)
 		{
+			b.length = len;
 			b.buffer = cast(void*)v.ptr;
 			b.buffer_length = v.length;
 			b.buffer_type = MYSQL_TYPE_STRING;
