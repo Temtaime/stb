@@ -10,14 +10,15 @@ import
 		std.exception,
 		std.algorithm,
 
-		etc.c.sqlite3;
+		etc.c.sqlite3,
+		utils.wrapper.except;
 
 
 final class SQLite
 {
 	this(string name)
 	{
-		enforce(sqlite3_open(name.toStringz, &_db) == SQLITE_OK, lastError);
+		sqlite3_open(name.toStringz, &_db) == SQLITE_OK || throwError(lastError);
 	}
 
 	~this()
@@ -33,9 +34,9 @@ package:
 		sqlite3_reset(stmt);
 	}
 
-	auto process(T)(sqlite3_stmt* stmt)
+	auto process(A...)(sqlite3_stmt* stmt)
 	{
-		auto that = this; // TODO: DMD BUG
+		auto self = this; // TODO: DMD BUG
 
 		struct S
 		{
@@ -46,34 +47,43 @@ package:
 				sqlite3_reset(stmt);
 			}
 
-			bool empty() const
+			const empty()
 			{
-				return _empty;
+				return !_hasRow;
 			}
 
 			void popFront()
 			{
 				assert(!empty);
-				_empty = !that.execute(stmt);
+				_hasRow = self.execute(stmt);
 			}
 
 			auto front()
 			{
-				Tuple!T r;
+				assert(_hasRow);
+
+				Tuple!A r;
 
 				foreach(i, ref v; r)
 				{
-					v = sqlite3_column_text(stmt, i).fromStringz.to!(typeof(v));
+					alias T = A[i];
+
+					v = sqlite3_column_text(stmt, i).fromStringz.to!T;
+
+					static if(isSomeString!T)
+					{
+						v = v.idup;
+					}
 				}
 
 				return r;
 			}
 
 		private:
-			bool _empty;
+			bool _hasRow;
 		}
 
-		return S(!execute(stmt));
+		return S(execute(stmt));
 	}
 
 	auto prepare(string sql)
@@ -82,7 +92,7 @@ package:
 
 		if(!stmt)
 		{
-			enforce(sqlite3_prepare_v2(_db, sql.toStringz, cast(int)sql.length, &stmt, null) == SQLITE_OK, lastError);
+			sqlite3_prepare_v2(_db, sql.toStringz, cast(int)sql.length, &stmt, null) == SQLITE_OK || throwError(lastError);
 			_stmts[sql] = stmt;
 		}
 
@@ -91,10 +101,10 @@ package:
 
 	void bind(A...)(sqlite3_stmt* stmt, A args)
 	{
-		int res;
-
 		foreach(uint i, v; args)
 		{
+			int res;
+
 			alias T = typeof(v);
 			auto idx = i + 1;
 
@@ -118,19 +128,19 @@ package:
 			{
 				static assert(false);
 			}
+
+			res == SQLITE_OK || throwError(lastError);
 		}
-
-		enforce(res == SQLITE_OK, lastError);
 	}
 
-	auto lastId()
+	auto lastId(sqlite3_stmt*)
 	{
-		return cast(uint)sqlite3_last_insert_rowid(_db);
+		return sqlite3_last_insert_rowid(_db);
 	}
 
-	auto affected()
+	auto affected(sqlite3_stmt*)
 	{
-		return cast(uint)sqlite3_changes(_db);
+		return sqlite3_changes(_db);
 	}
 
 private:
@@ -142,13 +152,13 @@ private:
 	bool execute(sqlite3_stmt* stmt)
 	{
 		auto res = sqlite3_step(stmt);
-		enforce(res == SQLITE_ROW || res == SQLITE_DONE, lastError);
+		res == SQLITE_ROW || res == SQLITE_DONE || throwError(lastError);
 		return res == SQLITE_ROW;
 	}
 
 	auto lastError()
 	{
-		return sqlite3_errmsg(_db).fromStringz.assumeUnique;
+		return sqlite3_errmsg(_db).fromStringz;
 	}
 
 	sqlite3* _db;
