@@ -27,6 +27,20 @@ final class SQLite
 		sqlite3_close(_db);
 	}
 
+	void backup(SQLite dest)
+	{
+		auto bk = sqlite3_backup_init(dest._db, `main`, _db, `main`);
+		bk || throwError(dest.lastError);
+
+		scope(exit)
+		{
+			sqlite3_backup_finish(bk);
+		}
+
+		auto rc = sqlite3_backup_step(bk, -1);
+		rc == SQLITE_DONE || throwError(`error backuping db: %s`, rc);
+	}
+
 package:
 	void process(sqlite3_stmt* stmt)
 	{
@@ -58,6 +72,18 @@ package:
 				_hasRow = self.execute(stmt);
 			}
 
+			auto array()
+			{
+				ReturnType!front[] res;
+
+				for(; _hasRow; popFront)
+				{
+					res ~= front;
+				}
+
+				return res;
+			}
+
 			auto front()
 			{
 				assert(_hasRow);
@@ -76,7 +102,14 @@ package:
 					}
 				}
 
-				return r;
+				static if(A.length > 1)
+				{
+					return r;
+				}
+				else
+				{
+					return r[0];
+				}
 			}
 
 		private:

@@ -72,6 +72,18 @@ package:
 				_hasRow = self.fetch(stmt);
 			}
 
+			auto array()
+			{
+				ReturnType!front[] res;
+
+				for(; _hasRow; popFront)
+				{
+					res ~= front;
+				}
+
+				return res;
+			}
+
 			auto front()
 			{
 				assert(_hasRow);
@@ -86,7 +98,14 @@ package:
 					}
 				}
 
-				return r;
+				static if(A.length > 1)
+				{
+					return r;
+				}
+				else
+				{
+					return r[0];
+				}
 			}
 
 		private:

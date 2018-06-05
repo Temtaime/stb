@@ -15,7 +15,8 @@
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define STBIW_ZLIB_COMPRESS compress_for_stb_image_write
-
 unsigned char* compress_for_stb_image_write(unsigned char *data, int data_len, int *out_len, int quality);
-
 #include <stb_image_write.h>
+
+#define STS_VERTEX_CACHE_OPTIMIZER_IMPLEMENTATION
+#include <sts_vertex_cache_optimizer.h>

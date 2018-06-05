@@ -73,7 +73,7 @@ extern "C" {
 
 // Function that does the optimization.
 // NOTE: numVertices has to equal the MAX vertex index in the indices.
-STSTVCOF void stsvco_optimize( unsigned int *indices, const unsigned int numIndices, const unsigned int numVertices, const int cacheSize = 32 );
+STSTVCOF void stsvco_optimize( unsigned int *indices, const unsigned int numIndices, const unsigned int numVertices, const int cacheSize );
 
 // Function that computes ACMR (Average Cache Miss Ratio) for a given index list and cache size.
 // The function returns the average number of cache misses per triangle, used for measuring
@@ -91,6 +91,7 @@ STSTVCOF float stsvco_compute_ACMR( const unsigned int *indices, const unsigned 
 #include <assert.h>
 #include <math.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 // Computes the score for a vertex with numTris using the vertex
 STSTVCOF float stsvco_valenceScore( const int numTris ) {
@@ -115,11 +116,11 @@ STSTVCOF void stsvco_optimize( unsigned int *indices, const unsigned int numIndi
 
     if( numIndices <= 3 || numVertices <= 3) return;
 
-    vertex   *vertices = (vertex*)malloc( numVertices*sizeof(vertex) ) ;
+    struct vertex   *vertices = (struct vertex*)malloc( numVertices*sizeof(struct vertex) ) ;
     assert( vertices && "Out of memory when allocating vertices");
 
     const int   numTriangles = numIndices/3;
-    triangle   *triangles = (triangle*)malloc( numTriangles*sizeof(triangle) );
+    struct triangle   *triangles = (struct triangle*)malloc( numTriangles*sizeof(struct triangle) );
     assert( triangles && "Out of memory when allocating triangles");
 
     for( int v = 0; v < numVertices; ++v) {

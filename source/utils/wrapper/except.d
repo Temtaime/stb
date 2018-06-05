@@ -2,6 +2,7 @@ module utils.wrapper.except;
 
 import
 		std.conv,
+		std.format,
 		std.exception;
 
 
