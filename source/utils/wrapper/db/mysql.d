@@ -88,7 +88,7 @@ package:
 			{
 				assert(_hasRow);
 
-				auto r = _res;
+				auto r = *_res;
 
 				foreach(i, T; A)
 				{
@@ -112,13 +112,14 @@ package:
 			void initialize()
 			{
 				MYSQL_BIND[] arr;
+				_res = new Tuple!A;
 
 				enforce(!mysql_stmt_store_result(stmt));
 
 				{
 					auto info = mysql_stmt_result_metadata(stmt);
 
-					foreach(i, ref v; _res)
+					foreach(i, ref v; *_res)
 					{
 						c_ulong* len;
 
@@ -128,7 +129,7 @@ package:
 							v.length = info.fields[i].max_length;
 						}
 
-						arr ~= self.makeBind(v, len);
+						arr ~= self.makeBind(&v, len);
 					}
 
 					mysql_free_result(info);
@@ -138,7 +139,7 @@ package:
 				_hasRow = self.fetch(stmt);
 			}
 
-			Tuple!A _res;
+			Tuple!A* _res;
 			c_ulong*[uint] _lens;
 			bool _hasRow;
 		}
@@ -168,9 +169,9 @@ package:
 		MYSQL_BIND[] ps;
 		assert(mysql_stmt_param_count(stmt) == A.length, `incorrect number of bind parameters`);
 
-		foreach(v; args)
+		foreach(ref v; args)
 		{
-			ps ~= makeBind(v);
+			ps ~= makeBind(&v);
 		}
 
 		!mysql_stmt_bind_param(stmt, ps.ptr) || throwError(lastError(stmt));
@@ -188,7 +189,7 @@ package:
 	}
 
 private:
-	auto makeBind(T)(ref T v, c_ulong* len = null)
+	auto makeBind(T)(T* v, c_ulong* len = null)
 	{
 		MYSQL_BIND b;
 
@@ -198,7 +199,7 @@ private:
 		}
 		else static if(isFloatingPoint!T)
 		{
-			b.buffer = &v;
+			b.buffer = v;
 			b.buffer_type = T.sizeof == 4 ? MYSQL_TYPE_FLOAT : MYSQL_TYPE_DOUBLE;
 		}
 		else static if(isIntegral!T)
@@ -212,7 +213,7 @@ private:
 			];
 
 			b.is_unsigned = isUnsigned!T;
-			b.buffer = &v;
+			b.buffer = v;
 			b.buffer_type = aa[T.sizeof];
 		}
 		else static if(isSomeString!T)

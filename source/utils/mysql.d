@@ -220,6 +220,7 @@ struct MYSQL_BIND
 
 	bool* error;
 	ubyte* row_ptr;
+
 	void function(NET* net, MYSQL_BIND* param) store_param_func;
 	void function(MYSQL_BIND*, MYSQL_FIELD*, ubyte** row) fetch_result;
 	void function(MYSQL_BIND*, MYSQL_FIELD*, ubyte** row) skip_result;
@@ -227,13 +228,13 @@ struct MYSQL_BIND
 	c_ulong buffer_length;
 	c_ulong offset;
 	c_ulong length_value;
-	uint	param_number;
+	uint param_number;
 	uint pack_length;
 	int buffer_type;
 	bool error_value;
 	bool is_unsigned;
-	bool	long_data_used;
-	bool	is_null_value;
+	bool long_data_used;
+	bool is_null_value;
 	void* extension;
 }
 
