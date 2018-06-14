@@ -214,7 +214,7 @@ struct MYSQL_PARAMETERS
 
 struct MYSQL_BIND
 {
-	c_ulong* ength;
+	c_ulong* length;
 	bool* is_null;
 	void* buffer;
 

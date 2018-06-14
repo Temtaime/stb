@@ -120,11 +120,11 @@ package:
 
 					foreach(i, ref v; _res)
 					{
-						size_t* len;
+						c_ulong* len;
 
 						static if(isSomeString!(A[i]))
 						{
-							_lens[i] = len = new size_t;
+							_lens[i] = len = new c_ulong;
 							v.length = info.fields[i].max_length;
 						}
 
@@ -139,7 +139,7 @@ package:
 			}
 
 			Tuple!A _res;
-			size_t*[uint] _lens;
+			c_ulong*[uint] _lens;
 			bool _hasRow;
 		}
 
@@ -188,7 +188,7 @@ package:
 	}
 
 private:
-	auto makeBind(T)(ref T v, size_t* len = null)
+	auto makeBind(T)(ref T v, c_ulong* len = null)
 	{
 		MYSQL_BIND b;
 
@@ -219,7 +219,7 @@ private:
 		{
 			b.length = len;
 			b.buffer = cast(void*)v.ptr;
-			b.buffer_length = v.length;
+			b.buffer_length = cast(uint)v.length;
 			b.buffer_type = MYSQL_TYPE_STRING;
 		}
 		else
