@@ -155,7 +155,7 @@ package:
 		if(!stmt)
 		{
 			stmt = mysql_stmt_init(_db);
-			!mysql_stmt_prepare(stmt, sql.ptr, sql.length) || throwError(lastError(stmt));
+			!mysql_stmt_prepare(stmt, sql.ptr, cast(uint)sql.length) || throwError(lastError(stmt));
 
 			_stmts[sql] = stmt;
 		}
