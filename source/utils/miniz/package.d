@@ -1,3 +1,5 @@
+module utils.miniz;
+
 import
 		std.conv,
 		std.file,
@@ -7,7 +9,7 @@ import
 		std.algorithm,
 		std.exception,
 
-		utils.miniz;
+		utils.miniz.binding;
 
 
 final class Zip

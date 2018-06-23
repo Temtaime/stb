@@ -1,4 +1,4 @@
-module utils.wrapper.db.mysql;
+module utils.db.mysql;
 
 import
 		std.conv,
@@ -10,8 +10,8 @@ import
 		std.exception,
 		std.algorithm,
 
-		utils.mysql,
-		utils.wrapper.except;
+		utils.except,
+		utils.db.mysql.binding;
 
 
 final class MySQL
@@ -42,7 +42,7 @@ package:
 
 	auto process(A...)(MYSQL_STMT* stmt)
 	{
-		assert(mysql_stmt_field_count(stmt) == A.length, `incorrect number of return fields`);
+		assert(mysql_stmt_field_count(stmt) == A.length, `incorrect number of fields to return`);
 
 		{
 			bool attr = true;

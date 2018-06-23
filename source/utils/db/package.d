@@ -1,13 +1,13 @@
-module utils.wrapper.db;
+module utils.db;
 
 import
 		std.typecons,
 
-		utils.wrapper.except;
+		utils.except;
 
 public import
-				utils.wrapper.db.mysql,
-				utils.wrapper.db.sqlite;
+				utils.db.mysql,
+				utils.db.sqlite;
 
 
 template query(T...)
@@ -37,16 +37,17 @@ template queryOne(T...)
 		res.empty && throwError(`query returned no rows`);
 
 		auto e = res.front;
-		res.popFront;
 
+		res.popFront;
 		res.empty || throwError(`query returned multiple rows`);
+
 		return e;
 	}
 }
 
 unittest
 {
-	auto db = new SQLite(`:memory:`);
+	scope db = new SQLite(`:memory:`);
 
 	auto res = db.query!(uint, string)(`select ?, ?;`, 123, `hello`);
 	auto res2 = db.queryOne!(uint, string)(`select ?, ?;`, 123, `hello`);

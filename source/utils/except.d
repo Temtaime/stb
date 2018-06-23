@@ -1,4 +1,4 @@
-module utils.wrapper.except;
+module utils.except;
 
 import
 		std.conv,

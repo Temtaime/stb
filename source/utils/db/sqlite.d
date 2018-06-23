@@ -1,4 +1,4 @@
-module utils.wrapper.db.sqlite;
+module utils.db.sqlite;
 
 import
 		std.conv,
@@ -11,7 +11,7 @@ import
 		std.algorithm,
 
 		etc.c.sqlite3,
-		utils.wrapper.except;
+		utils.except;
 
 
 final class SQLite
@@ -95,11 +95,6 @@ package:
 					alias T = A[i];
 
 					v = sqlite3_column_text(stmt, i).fromStringz.to!T;
-
-					static if(isSomeString!T)
-					{
-						v = v.idup;
-					}
 				}
 
 				static if(A.length > 1)

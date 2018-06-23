@@ -1,4 +1,4 @@
-module utils.miniz;
+module utils.miniz.binding;
 
 import
 		core.stdc.stdio;

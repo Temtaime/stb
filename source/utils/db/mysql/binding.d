@@ -1,4 +1,4 @@
-module utils.mysql;
+module utils.db.mysql.binding;
 
 public import
 				core.stdc.config;
