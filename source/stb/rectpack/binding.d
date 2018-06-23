@@ -1,4 +1,4 @@
-module stb.rectpack;
+module stb.rectpack.binding;
 
 
 enum

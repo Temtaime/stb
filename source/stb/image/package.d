@@ -1,4 +1,4 @@
-module stb.wrapper.image;
+module stb.image;
 
 import
 		core.bitop,
@@ -17,9 +17,9 @@ import
 		core.stdc.string,
 		etc.c.zlib,
 
-		stb.image,
-		stb.imagewrite,
-		stb.imageresize;
+		stb.image.write,
+		stb.image.resize,
+		stb.image.binding;
 
 
 struct Color

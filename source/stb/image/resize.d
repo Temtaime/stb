@@ -1,4 +1,4 @@
-module stb.imageresize;
+module stb.image.resize;
 
 
 alias stbir_edge = int;

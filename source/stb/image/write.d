@@ -1,4 +1,4 @@
-module stb.imagewrite;
+module stb.image.write;
 
 
 extern(C):

@@ -1,11 +1,11 @@
-module stb.wrapper.packer;
+module stb.rectpack;
 
 import
 		std.typecons,
 		std.algorithm,
 
-		stb.wrapper,
-		stb.rectpack;
+		stb,
+		stb.rectpack.binding;
 
 
 struct TexturePacker

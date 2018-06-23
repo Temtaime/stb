@@ -1,4 +1,4 @@
-module stb.dxt;
+module stb.dxt.binding;
 
 
 enum

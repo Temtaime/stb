@@ -1,10 +1,10 @@
-module stb.wrapper.dxt;
+module stb.dxt;
 
 import
 		std.algorithm,
 
-		stb.dxt,
-		stb.wrapper.image;
+		stb.image,
+		stb.dxt.binding;
 
 
 uint dxtTextureSize(uint w, uint h, bool isDxt5)

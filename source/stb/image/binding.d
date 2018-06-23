@@ -1,4 +1,4 @@
-module stb.image;
+module stb.image.binding;
 
 import core.stdc.stdio : FILE;
 
