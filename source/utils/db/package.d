@@ -47,8 +47,17 @@ template queryOne(T...)
 
 unittest
 {
-	scope db = new SQLite(`:memory:`);
+	{
+		scope db = new SQLite(`:memory:`);
 
-	auto res = db.query!(uint, string)(`select ?, ?;`, 123, `hello`);
-	auto res2 = db.queryOne!(uint, string)(`select ?, ?;`, 123, `hello`);
+		auto res = db.query!(uint, string)(`select ?, ?;`, 123, `hello`);
+		auto res2 = db.queryOne!uint(`select ?;`, 123);
+	}
+
+	{
+		MySQL db;
+
+		auto res = db.query!(uint, string)(`select ?, ?;`, 123, `hello`);
+		auto res2 = db.queryOne!uint(`select ?;`, 123);
+	}
 }

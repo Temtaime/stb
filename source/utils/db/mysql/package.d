@@ -34,7 +34,8 @@ final class MySQL
 		mysql_close(_db);
 	}
 
-package:
+package(utils.db):
+
 	void process(MYSQL_STMT* stmt)
 	{
 		mysql_stmt_reset(stmt);
