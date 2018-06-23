@@ -38,7 +38,7 @@ final class SQLite
 		}
 
 		auto rc = sqlite3_backup_step(bk, -1);
-		rc == SQLITE_DONE || throwError(`error backuping db: %s`, rc);
+		rc == SQLITE_DONE || throwError!`error backuping db: %s`(rc);
 	}
 
 package:
