@@ -1,8 +1,6 @@
 module utils.logger;
 
 
-version(UTILS_LOGGER):
-
 import
 		std.stdio,
 		std.range,
