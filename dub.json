@@ -1,9 +1,10 @@
 ﻿{
 	"name": "stb",
-	"description": "stb bindings for D",
+	"targetType": "sourceLibrary",
 
-	"authors": [ "Temtaime" ],
 	"license": "mit",
+	"authors": [ "Temtaime" ],
+	"description": "stb and other bindings for D",
 
 	"dependencies":
 	{
