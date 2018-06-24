@@ -1,15 +1,9 @@
 ﻿{
 	"name": "stb",
-	"targetType": "sourceLibrary",
 
 	"license": "mit",
 	"authors": [ "Temtaime" ],
 	"description": "stb and other bindings for D",
-
-	"dependencies":
-	{
-		"arsd-official:terminal": ">=2.1.0"
-	},
 
 	"libs-windows-x86": [ "$PACKAGE_DIR/lib/stb" ],
 	"libs-windows-x86_64": [ "$PACKAGE_DIR/lib/stb_x64" ]

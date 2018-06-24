@@ -29,6 +29,9 @@
 			<Add option="/DMINIZ_NO_ZLIB_COMPATIBLE_NAMES" />
 			<Add directory="src" />
 		</Compiler>
+		<Unit filename="src/console-colors.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="src/main.c">
 			<Option compilerVar="CC" />
 		</Unit>

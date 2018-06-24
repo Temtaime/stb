@@ -2,43 +2,46 @@ module utils.logger;
 
 
 import
-		std.stdio,
+		std.conv,
 		std.range,
 		std.string,
+		std.algorithm,
 
-		arsd.terminal;
+		core.stdc.stdio,
+
+		utils.console;
 
 
 struct Logger
 {
 	void info(A...)(A args)
 	{
-		log(Color.green | Bright, args);
+		log(CC_FG_GREEN, args);
 	}
 
 	void info2(A...)(A args)
 	{
-		log(Color.magenta | Bright, args);
+		log(CC_FG_MAGENTA, args);
 	}
 
 	void info3(A...)(A args)
 	{
-		log(Color.white, args);
+		log(CC_FG_WHITE, args);
 	}
 
 	void error(A...)(A args)
 	{
-		log(Color.red | Bright, args);
+		log(CC_FG_RED, args);
 	}
 
 	void warning(A...)(A args)
 	{
-		log(Color.yellow | Bright, args);
+		log(CC_FG_YELLOW, args);
 	}
 
 	void opCall(A...)(A args)
 	{
-		log(Color.cyan | Bright, args);
+		log(CC_FG_CYAN, args);
 	}
 
 	ubyte ident;
@@ -47,17 +50,25 @@ private:
 	{
 		static if(args.length == 1)
 		{
-			auto term = Terminal(ConsoleOutputType.minimalProcessing);
-			term.color(c, Color.DEFAULT);
-
-			"\t".repeat(ident).join.write;
-			args[0].writeln;
+			ident.iota.each!(a => write(c, "\t"));
+			write(c, args[0].to!string);
+			write(c, "\n");
 		}
 		else
 		{
 			log(c, format(args));
 		}
 	}
+
+	void write(int color, string s)
+	{
+		cc_fprintf(color, stdout, "%.*s", s.length, s.ptr);
+	}
 }
 
 __gshared Logger logger;
+
+unittest
+{
+	logger(`hello, world`);
+}
