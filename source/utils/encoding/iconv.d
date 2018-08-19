@@ -17,7 +17,7 @@ auto iconv(string s, string from, string to)
 	auto q = to ~ `//IGNORE//TRANSLIT`;
 	auto iv = iconv_open(q.toStringz, from.toStringz);
 
-	cast(ptrdiff_t)iv != -1 || throwError(`can't convert from %s to %s`, from, to);
+	cast(ptrdiff_t)iv != -1 || throwError!`can't convert from %s to %s`(from, to);
 
 	scope(exit)
 	{
