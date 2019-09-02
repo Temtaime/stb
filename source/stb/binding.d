@@ -9,7 +9,7 @@ auto stb_arrhead(T)(T** a)
 	return cast(stb__arr*)a - 1;
 }
 
-extern(C):
+extern(C) @nogc nothrow:
 
 alias time_t = ulong;
 
