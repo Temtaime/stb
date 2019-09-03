@@ -12,7 +12,7 @@ enum
 	STBI_rgb_alpha
 }
 
-extern(C):
+extern(C) @nogc nothrow:
 
 struct stbi_io_callbacks
 {
