@@ -59,11 +59,10 @@ jobs:
       - uses: actions/download-artifact@v2
 
       - run: |
-          mkdir bin
           mv artifact/* bin
 
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add bin
+          git add -u
           git commit -m generated
           git push
