@@ -59,6 +59,7 @@ jobs:
       - uses: actions/download-artifact@v2
 
       - run: |
+          mkdir bin
           mv artifact/* bin
 
           git config user.name github-actions
