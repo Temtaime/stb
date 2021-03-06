@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [ x86, x64 ]
+        os: [ ubuntu-20.04, windows-latest ]
+        exclude:
+          - arch: x86
+            os: ubuntu-20.04
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ matrix.arch }}
+
+      - uses: dlang-community/setup-dlang@v1
+        with:
+          compiler: ldc-latest
+
+      - run: |
+          dub test -b unittest
