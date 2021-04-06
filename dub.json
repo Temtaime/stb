@@ -11,7 +11,7 @@
 	"libs-windows-x86_64": [
 		"$PACKAGE_DIR/bin/stb_x64"
 	],
-	"libs-linux": [
+	"lflags-linux": [
 		"$PACKAGE_DIR/bin/libstb.a"
 	]
 }
