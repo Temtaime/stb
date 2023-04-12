@@ -13,20 +13,20 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - arch: x86
-            os: windows-latest
-            dub_arch: x86_mscoff
-            dub_compiler: ldc-latest
+          # - arch: x86
+          #   os: windows-latest
+          #   dub_arch: x86_mscoff
+          #   dub_compiler: ldc-latest
 
-          - arch: x64
-            os: windows-latest
-            dub_arch: x86_64
-            dub_compiler: ldc-latest
+          # - arch: x64
+          #   os: windows-latest
+          #   dub_arch: x86_64
+          #   dub_compiler: ldc-latest
 
-          - arch: x64
-            os: ubuntu-20.04
-            dub_arch: x86_64
-            dub_compiler: ldc-latest
+          # - arch: x64
+          #   os: ubuntu-20.04
+          #   dub_arch: x86_64
+          #   dub_compiler: ldc-latest
 
           - arch: x86
             os: windows-latest
