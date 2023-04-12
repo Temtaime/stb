@@ -1,5 +1,5 @@
 module stb.image;
-import std, etc.c.zlib, stb_main, core.stdc.string : memcpy;
+import std, etc.c.zlib, stb, core.stdc.string : memcpy;
 
 public import stb.image.color;
 

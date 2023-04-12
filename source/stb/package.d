@@ -1,5 +1,5 @@
 module stb;
-import stb_main;
+public import stb_main;
 
 int binarySearch(int min, int max, int delegate(int) comp, bool lower = true)
 {
