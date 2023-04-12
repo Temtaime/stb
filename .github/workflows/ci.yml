@@ -28,10 +28,11 @@ jobs:
           #   dub_arch: x86_64
           #   dub_compiler: ldc-latest
 
-          - arch: x86
-            os: windows-latest
-            dub_arch: x86_mscoff
-            dub_compiler: dmd-latest
+          # bug 23837
+          # - arch: x86
+          #   os: windows-latest
+          #   dub_arch: x86_mscoff
+          #   dub_compiler: dmd-latest
 
           - arch: x64
             os: windows-latest
