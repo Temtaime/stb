@@ -1,3 +1,4 @@
 /.dub/
 /dub.selections.json
 /stb-test-library.exe
+/stb-test-library.pdb

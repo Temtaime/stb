@@ -1,115 +1,7 @@
 module stb.image;
+import std, etc.c.zlib, stb_main, core.stdc.string : memcpy;
 
-import
-		core.bitop,
-		std.file,
-		std.path,
-		std.conv,
-		std.math,
-		std.range,
-		std.string,
-		std.mmfile,
-		std.typecons,
-		std.bitmanip,
-		std.exception,
-		std.algorithm,
-
-		core.stdc.string,
-		etc.c.zlib,
-
-		stb.image.write,
-		stb.image.resize,
-		stb.image.binding;
-
-
-struct Color
-{
-	this(uint r, uint g, uint b, uint a = 0)
-	{
-		this.r = cast(ubyte)r;
-		this.g = cast(ubyte)g;
-		this.b = cast(ubyte)b;
-		this.a = cast(ubyte)a;
-	}
-
-	static fromInt(uint n)
-	{
-		n = n.bswap;
-		return *cast(Color*)&n;
-	}
-
-	const
-	{
-		auto opBinary(string op: `*`)(in Color c)
-		{
-			return Color(
-							r * c.r / 255,
-							g * c.g / 255,
-							b * c.b / 255,
-							a * c.a / 255
-												);
-		}
-
-		auto opBinary(string op: `+`)(in Color c)
-		{
-			return Color(
-							min(r + c.r, 255),
-							min(g + c.g, 255),
-							min(b + c.b, 255),
-							min(a + c.a, 255)
-												);
-		}
-
-		auto opBinary(string op: `^`)(in Color c)
-		{
-			// TODO: CHECK FORCORRECTNESS
-			auto od = 255 - c.a;
-			auto ra = c.a + a * od / 255;
-
-			// TODO: WORKAROUND
-			if(!ra) ra = 1;
-
-			return Color(
-							(c.r * c.a + r * a * od / 255) / ra,
-							(c.g * c.a + g * a * od / 255) / ra,
-							(c.b * c.a + b * a * od / 255) / ra,
-							ra
-																	);
-		}
-
-		bool isGray(ubyte n)
-		{
-			auto a = min(r, g, b), b = max(r, g, b);
-			return abs(a - b) < 30 && b < n;
-		}
-
-		bool compare(in Color c, ubyte d)
-		{
-			return abs(r - c.r) + abs(g - c.g) + abs(b - c.b) + abs(a - c.a) <= d * 4;
-		}
-	}
-
-	ref opOpAssign(string op)(in Color c)
-	{
-		return this = this.opBinary!op(c);
-	}
-
-	ubyte
-			r,
-			g,
-			b,
-			a;
-}
-
-static assert(Color.sizeof == 4);
-
-enum
-{
-	colorGray = Color(128, 128, 128, 200),
-	colorBlack = Color(0, 0, 0, 255),
-	colorWhite = Color(255, 255, 255, 255),
-	colorTransparent = Color.init,
-}
+public import stb.image.color;
 
 enum
 {
@@ -125,7 +17,7 @@ final class Image
 	{
 		auto f = new MmFile(name);
 
-		scope(exit)
+		scope (exit)
 		{
 			f.destroy;
 		}
@@ -135,10 +27,10 @@ final class Image
 
 	this(in void[] data)
 	{
-		auto p = cast(Color*)stbi_load_from_memory(data.ptr, cast(uint)data.length, cast(int*)&_w, cast(int*)&_h, null, 4);
+		auto p = cast(Color*)stbi_load_from_memory(cast(const(ubyte)*)data.ptr, cast(uint)data.length, cast(int*)&_w, cast(int*)&_h, null, 4);
 		enforce(p, `unknown/corrupted image`);
 
-		_data = p[0.._w * _h].dup;
+		_data = p[0 .. _w * _h].dup;
 		stbi_image_free(p);
 	}
 
@@ -146,7 +38,7 @@ final class Image
 	{
 		assert(w && h);
 
-		if(data.length)
+		if (data.length)
 		{
 			_data = cast(Color[])data;
 			assert(_data.length == w * h);
@@ -171,7 +63,7 @@ final class Image
 	{
 		assert(x + im._w <= _w && y + im._h <= _h);
 
-		foreach(j; 0..im._h)
+		foreach (j; 0 .. im._h)
 		{
 			memcpy(&this[x, j + y], &im[0, j], im.w * 4);
 		}
@@ -190,7 +82,7 @@ final class Image
 		{
 			ubyte f;
 
-			switch(name.extension.stripLeft(`.`).toLower)
+			switch (name.extension.stripLeft(`.`).toLower)
 			{
 			case `png`:
 				f = IM_PNG;
@@ -222,7 +114,7 @@ final class Image
 			bool res;
 			void[] data;
 
-			final switch(format)
+			final switch (format)
 			{
 			case IM_BMP:
 				res = !!stbi_write_bmp_to_func(&writerCallback, &data, _w, _h, 4, _data.ptr);
@@ -246,9 +138,9 @@ final class Image
 			assert(x + w <= _w && y + h <= _h);
 			auto res = new Image(w, h);
 
-			foreach(i; 0..w)
-			foreach(j; 0..h)
-				res[j][] = this[y + j][x..x + w][];
+			foreach (i; 0 .. w)
+				foreach (j; 0 .. h)
+					res[j][] = this[y + j][x .. x + w][];
 
 			return res;
 		}
@@ -279,8 +171,8 @@ final class Image
 	void clean()
 	{
 		_data
-				.filter!((ref a) => a.compare(Color(255, 0, 255, 255), 10))
-				.each!((ref a) => a.a = 0);
+			.filter!((ref a) => a.compare(Color(255, 0, 255, 255), 10))
+			.each!((ref a) => a.a = 0);
 
 		normalizeTransparentPixels;
 	}
@@ -296,38 +188,38 @@ final class Image
 		uint[] pendingNext;
 
 		static immutable byte[2][8] offsets =
-		[
-			[ -1, -1 ],
-			[  0, -1 ],
-			[  1, -1 ],
-			[ -1,  0 ],
-			[  1,  0 ],
-			[ -1,  1 ],
-			[  0,  1 ],
-			[  1,  1 ]
-		];
+			[
+				[-1, -1],
+				[0, -1],
+				[1, -1],
+				[-1, 0],
+				[1, 0],
+				[-1, 1],
+				[0, 1],
+				[1, 1]
+			];
 
 		auto image = cast(ubyte[])_data;
 
-		for(uint i = 0, j = 3; i < N; i++, j += 4)
+		for (uint i = 0, j = 3; i < N; i++, j += 4)
 		{
-			if(image[j] == 0)
+			if (image[j] == 0)
 			{
 				bool isLoose = true;
 
 				int x = i % _w;
 				int y = i / _w;
 
-				for(int k = 0; k < 8; k++)
+				for (int k = 0; k < 8; k++)
 				{
 					int s = offsets[k][0];
 					int t = offsets[k][1];
 
-					if(x + s >= 0 && x + s < _w && y + t >= 0 && y + t < _h)
+					if (x + s >= 0 && x + s < _w && y + t >= 0 && y + t < _h)
 					{
 						uint index = j + 4 * (s + t * _w);
 
-						if(image[index] != 0)
+						if (image[index] != 0)
 						{
 							isLoose = false;
 							break;
@@ -335,7 +227,7 @@ final class Image
 					}
 				}
 
-				if(isLoose)
+				if (isLoose)
 				{
 					loose[i] = true;
 				}
@@ -350,11 +242,11 @@ final class Image
 			}
 		}
 
-		while(pending.length > 0)
+		while (pending.length > 0)
 		{
 			pendingNext = null;
 
-			for(uint p = 0; p < pending.length; p++)
+			for (uint p = 0; p < pending.length; p++)
 			{
 				uint i = pending[p] * 4;
 				uint j = pending[p];
@@ -368,16 +260,16 @@ final class Image
 
 				int count = 0;
 
-				for(uint k = 0; k < 8; k++)
+				for (uint k = 0; k < 8; k++)
 				{
 					int s = offsets[k][0];
 					int t = offsets[k][1];
 
-					if(x + s >= 0 && x + s < _w && y + t >= 0 && y + t < _h)
+					if (x + s >= 0 && x + s < _w && y + t >= 0 && y + t < _h)
 					{
 						t *= _w;
 
-						if(opaque[j + s + t] & 1)
+						if (opaque[j + s + t] & 1)
 						{
 							uint index = i + 4 * (s + t);
 
@@ -390,7 +282,7 @@ final class Image
 					}
 				}
 
-				if(count > 0)
+				if (count > 0)
 				{
 					image[i + 0] = cast(ubyte)(r / count);
 					image[i + 1] = cast(ubyte)(g / count);
@@ -398,16 +290,16 @@ final class Image
 
 					opaque[j] = cast(byte)0xFE;
 
-					for(uint k = 0; k < 8; k++)
+					for (uint k = 0; k < 8; k++)
 					{
 						int s = offsets[k][0];
 						int t = offsets[k][1];
 
-						if(x + s >= 0 && x + s < _w && y + t >= 0 && y + t < _h)
+						if (x + s >= 0 && x + s < _w && y + t >= 0 && y + t < _h)
 						{
 							uint index = j + s + t * _w;
 
-							if(loose[index])
+							if (loose[index])
 							{
 								pendingNext ~= index;
 								loose[index] = false;
@@ -421,9 +313,9 @@ final class Image
 				}
 			}
 
-			if(pendingNext.length > 0)
+			if (pendingNext.length > 0)
 			{
-				for(uint p = 0; p < pending.length; p++)
+				for (uint p = 0; p < pending.length; p++)
 				{
 					opaque[pending[p]] >>= 1;
 				}
@@ -435,22 +327,22 @@ final class Image
 
 	auto flip()
 	{
-		foreach(j; 0.._h / 2)
-		foreach(i; 0.._w)
-		{
-			swap(this[i, j], this[i, _h - j - 1]);
-		}
+		foreach (j; 0 .. _h / 2)
+			foreach (i; 0 .. _w)
+			{
+				swap(this[i, j], this[i, _h - j - 1]);
+			}
 
 		return this;
 	}
 
 	auto mirror()
 	{
-		foreach(i; 0.._w / 2)
-		foreach(j; 0.._h)
-		{
-			swap(this[i, j], this[_w - i - 1, j]);
-		}
+		foreach (i; 0 .. _w / 2)
+			foreach (j; 0 .. _h)
+			{
+				swap(this[i, j], this[_w - i - 1, j]);
+			}
 
 		return this;
 	}
@@ -459,20 +351,20 @@ final class Image
 	{
 		auto toMipmaps()
 		{
-			inout(Image)[] res = [ this ];
+			inout(Image)[] res = [this];
 
-			while(true)
+			while (true)
 			{
 				auto im = res.back;
 
-				if(im.w == 1 && im.h == 1)
+				if (im.w == 1 && im.h == 1)
 				{
 					break;
 				}
 
 				auto
-						w = max(im.w / 2, 1),
-						h = max(im.h / 2, 1);
+				w = max(im.w / 2, 1),
+				h = max(im.h / 2, 1);
 
 				res ~= cast(inout(Image))resize(w, h);
 			}
@@ -488,7 +380,7 @@ final class Image
 		auto opIndex(uint y)
 		{
 			auto c = y * _w;
-			return _data[c..c + _w];
+			return _data[c .. c + _w];
 		}
 
 		auto opSlice()
@@ -499,24 +391,30 @@ final class Image
 
 	@property const
 	{
-		auto w() { return _w; }
-		auto h() { return _h; }
+		auto w()
+		{
+			return _w;
+		}
+
+		auto h()
+		{
+			return _h;
+		}
 	}
 
 private:
-	static extern(C) void writerCallback(void* ptr, void* data, int len)
+	static extern (C) void writerCallback(void* ptr, void* data, int len)
 	{
-		*cast(void[]*)ptr ~= data[0..len];
+		*cast(void[]*)ptr ~= data[0 .. len];
 	}
 
 	Color[] _data;
 
-	uint
-			_w,
-			_h;
+	uint _w,
+	_h;
 }
 
-private extern(C):
+private extern (C):
 
 ubyte* compress_for_stb_image_write(in ubyte* data, uint len, uint* resLen, int level)
 {
@@ -525,7 +423,7 @@ ubyte* compress_for_stb_image_write(in ubyte* data, uint len, uint* resLen, int 
 	auto dst = compressBound(len);
 	auto res = cast(ubyte*)malloc(dst);
 
-	if(compress2(res, &dst, data, len, level) == Z_OK)
+	if (compress2(res, &dst, data, len, level) == Z_OK)
 	{
 		*resLen = cast(uint)dst;
 		return res;

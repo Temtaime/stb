@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  BUILD_CMD: -fno-stack-protector -O3 -msse3 -DNDEBUG main.c
+  BUILD_CMD: -fno-stack-protector -O3 -msse3 -DNDEBUG -DSTB_DEFINE -DSTB_IMAGE_IMPLEMENTATION -DSTB_IMAGE_RESIZE_IMPLEMENTATION -DSTB_RECT_PACK_IMPLEMENTATION -DSTB_DXT_IMPLEMENTATION -DSTB_IMAGE_WRITE_IMPLEMENTATION source/stb_main.c
 
 jobs:
   build-windows:

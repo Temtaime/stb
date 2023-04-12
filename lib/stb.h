@@ -228,7 +228,7 @@ CREDITS
    #define _CRT_NON_CONFORMING_SWPRINTFS
    #endif
    #if !defined(_MSC_VER) || _MSC_VER > 1700
-   #include <intrin.h> // _BitScanReverse
+   //#include <intrin.h> // _BitScanReverse
    #endif
 #endif
 
