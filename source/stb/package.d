@@ -12,3 +12,9 @@ int binarySearch(int min, int max, int delegate(int) comp, bool lower = true)
 
 	return res;
 }
+
+static this()
+{
+    // To prevent linker from stripping the symbol
+    auto f = &compress_for_stb_image_write;
+}
