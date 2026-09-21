@@ -24,7 +24,7 @@ jobs:
             dub_compiler: ldc-latest
 
           - arch: x64
-            os: ubuntu-20.04
+            os: ubuntu-24.04
             dub_arch: x86_64
             dub_compiler: ldc-latest
 
@@ -34,7 +34,7 @@ jobs:
           #   dub_compiler: dmd-latest
 
           # - arch: x64
-          #   os: ubuntu-20.04
+          #   os: ubuntu-24.04
           #   dub_arch: x86_64
           #   dub_compiler: dmd-latest
 
