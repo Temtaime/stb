@@ -1,5 +1,5 @@
 module stb.dxt;
-import std.algorithm, stb_main, stb.image;
+import stb_main, stb.image, std.algorithm : min;
 
 uint dxtTextureSize(uint w, uint h, bool isDxt5)
 {
@@ -17,21 +17,23 @@ ubyte[] dxtCompress(in Image im, bool isDxt5)
 	auto line = (im.w + 3) / 4;
 
 	for (uint y; y < im.h; y += 4)
-	for (uint x; x < im.w; x += 4)
 	{
-		Color[4][4] block;
-
-		foreach (k; 0 .. 4)
+		for (uint x; x < im.w; x += 4)
 		{
-			auto v = min(y + k, im.h - 1);
+			Color[4][4] block;
 
-			foreach (u; 0 .. 4)
+			foreach (k; 0 .. 4)
 			{
-				block[k][u] = im[min(x + u, im.w - 1), v];
-			}
-		}
+				auto v = min(y + k, im.h - 1);
 
-		stb_compress_dxt_block(res.ptr + (y * line + x) * sz, cast(ubyte*)block.ptr, isDxt5, STB_DXT_DITHER | STB_DXT_HIGHQUAL);
+				foreach (u; 0 .. 4)
+				{
+					block[k][u] = im[min(x + u, im.w - 1), v];
+				}
+			}
+
+			stb_compress_dxt_block(res.ptr + (y * line + x) * sz, cast(ubyte*)block.ptr, isDxt5, STB_DXT_DITHER | STB_DXT_HIGHQUAL);
+		}
 	}
 
 	return res;

@@ -4,7 +4,7 @@
 		{
 			"type": "dub",
 			"test": true,
-			"compiler": "dmd",
+			"compiler": "ldc2",
 			"archType": "x86_64",
 			"buildType": "unittest",
 			"configuration": "library",

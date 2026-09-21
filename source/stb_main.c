@@ -1,5 +1,3 @@
-#define restrict unused // bug 23808
-
 #include "../lib/stb.h"
 #include "../lib/stb_image.h"
 #include "../lib/stb_image_resize.h"
