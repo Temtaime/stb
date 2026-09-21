@@ -37,12 +37,12 @@ jobs:
           - arch: x64
             os: windows-latest
             dub_arch: x86_64
-            dub_compiler: dmd-latest
+            dub_compiler: ldc-latest
 
           - arch: x64
             os: ubuntu-20.04
             dub_arch: x86_64
-            dub_compiler: dmd-latest
+            dub_compiler: ldc-latest
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -60,7 +60,7 @@ jobs:
           dub test -b unittest -a ${{ matrix.dub_arch }}
 
   release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [ build ]
     if: "!contains(github.event.head_commit.message, 'WIP')"
 

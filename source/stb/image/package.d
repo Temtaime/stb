@@ -421,7 +421,7 @@ private:
 
 private extern (C):
 
-ubyte* compress_for_stb_image_write(in ubyte* data, uint len, uint* resLen, int level)
+ubyte* compress_for_stb_image_write(ubyte* data, uint len, uint* resLen, int level)
 {
 	import core.stdc.stdlib;
 
