@@ -1,5 +1,5 @@
 module stb.dxt;
-import stb_main, stb.image, std.algorithm : min;
+import stb_c, stb.image, std.algorithm : min;
 
 uint dxtTextureSize(uint w, uint h, bool isDxt5)
 {

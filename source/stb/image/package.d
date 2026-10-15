@@ -150,10 +150,17 @@ final class Image
 			return res;
 		}
 
-		auto resize(uint w, uint h)
+		auto resize(uint w, uint h, bool srgb)
 		{
 			auto res = new Image(w, h);
-			stbir_resize_uint8(cast(ubyte*)_data.ptr, _w, _h, 0, cast(ubyte*)res[].ptr, w, h, 0, 4);
+
+			if (srgb)
+			{
+				stbir_resize_uint8_srgb(cast(ubyte*)_data.ptr, _w, _h, 0, cast(ubyte*)res[].ptr, w, h, 0, STBIR_RGBA);
+			}
+			else
+				stbir_resize_uint8_linear(cast(ubyte*)_data.ptr, _w, _h, 0, cast(ubyte*)res[].ptr, w, h, 0, STBIR_RGBA);
+
 			return res;
 		}
 
@@ -354,7 +361,7 @@ final class Image
 
 	inout
 	{
-		auto toMipmaps()
+		auto toMipmaps(bool srgb)
 		{
 			inout(Image)[] res = [this];
 
@@ -371,7 +378,7 @@ final class Image
 				w = max(im.w / 2, 1),
 				h = max(im.h / 2, 1);
 
-				res ~= cast(inout(Image))resize(w, h);
+				res ~= cast(inout(Image))resize(w, h, srgb);
 			}
 
 			return res;

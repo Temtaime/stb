@@ -1,0 +1,24 @@
+#!/bin/bash
+set -euo pipefail
+
+OPT_SPEED=
+DISABLE_LTO=
+
+source compiler.sh
+
+DEFINES=(
+	-I include
+
+	-D STB_DEFINE
+	-D STB_IMAGE_IMPLEMENTATION
+	-D STB_IMAGE_RESIZE_IMPLEMENTATION
+	-D STB_RECT_PACK_IMPLEMENTATION
+	-D STB_DXT_IMPLEMENTATION
+	-D STB_IMAGE_WRITE_IMPLEMENTATION
+)
+
+do_clang stb \
+	\
+	"${DEFINES[*]}" \
+	\
+	import_c/*.c

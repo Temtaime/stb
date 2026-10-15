@@ -5,13 +5,22 @@
 		"Temtaime"
 	],
 	"description": "stb bindings for D",
-	"libs-windows-x86": [
-		"$PACKAGE_DIR/bin/stb_x86"
+	"cImportPaths": [
+		"$PACKAGE_DIR/deps/include"
 	],
-	"libs-windows-x86_64": [
-		"$PACKAGE_DIR/bin/stb_x64"
+	"importPaths": [
+		"$PACKAGE_DIR/deps/import_c"
+	],
+	"lflags-windows": [
+		"/LIBPATH:$PACKAGE_DIR/deps/lib"
 	],
 	"lflags-linux": [
-		"$PACKAGE_DIR/bin/libstb.a"
+		"-L$PACKAGE_DIR/deps/lib"
+	],
+	"lflags-wasm32": [
+		"-L$PACKAGE_DIR/deps/lib/wasm"
+	],
+	"libs": [
+		"stb"
 	]
 }
