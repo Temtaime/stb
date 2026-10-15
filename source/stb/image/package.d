@@ -20,14 +20,17 @@ final class Image
 {
 	this(string name)
 	{
-		auto f = new MmFile(name);
-
-		scope (exit)
+		version (Emscripten)
 		{
-			f.destroy;
+			auto data = std.file.read(name);
+		}
+		else
+		{
+			scope mm = new MmFile(name);
+			auto data = mm[];
 		}
 
-		this(f[]);
+		this(data);
 	}
 
 	this(in void[] data)

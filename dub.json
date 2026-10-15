@@ -5,11 +5,9 @@
 		"Temtaime"
 	],
 	"description": "stb bindings for D",
-	"cImportPaths": [
-		"$PACKAGE_DIR/deps/include"
-	],
-	"importPaths": [
-		"$PACKAGE_DIR/deps/import_c"
+	"dflags": [
+		"-I$PACKAGE_DIR/deps/import_c",
+		"-P-I$PACKAGE_DIR/deps/include"
 	],
 	"lflags-windows": [
 		"/LIBPATH:$PACKAGE_DIR/deps/lib"
