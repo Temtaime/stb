@@ -1,3 +1,5 @@
+LIB_DIR=lib
+
 ### options
 
 if [[ -v OPT_SPEED ]]
@@ -7,12 +9,14 @@ else
 	OPT_LEVEL="-Oz"
 fi
 
+TO_BUILD="WIN WASM LINUX"
+
 ### platform settings
 
-OPT_LINUX="--target=x86_64-linux-musl -isystem /f/workshop/tools/compiler/musl-dev/include"
+OPT_LINUX="--target=x86_64-linux-musl --sysroot=F:/workshop/tools/compiler/musl-dev -stdlib=libc++"
 
-OPT_WASM="-msimd128"
 OPT_X64="-m64 -march=x86-64-v2"
+OPT_WASM="-msimd128 -matomics -mbulk-memory"
 
 ### opt settings
 
@@ -61,7 +65,7 @@ do_clang_impl()
 
 	case $TARGET in
 	WASM)
-		COMPILER=emcc.bat
+		COMPILER=emcc
 
 		OUT_DIR=$OUT_DIR/wasm
 		OPTIONS="$OPTIONS $OPT_WASM"
@@ -97,7 +101,7 @@ do_clang_impl()
 
 	if [[ $TARGET == "WASM" ]]
 	then
-		AR=emar.bat
+		AR=emar
 	else
 		AR=llvm-ar
 	fi
@@ -112,14 +116,14 @@ do_clang()
 	local NAME=$1; shift
 	local OPTIONS=$1; shift
 
-	for p in WIN WASM LINUX
+	for p in $TO_BUILD
 	do
 		if [[ -v DISABLE_LTO ]]
 		then
-			do_clang_impl $p lib $NAME "$OPTIONS $OPT_RELEASE" "$@" &
+			do_clang_impl $p $LIB_DIR $NAME "$OPTIONS $OPT_RELEASE" "$@" &
 		else
-			do_clang_impl $p lib/debug $NAME "$OPTIONS" "$@" &
-			do_clang_impl $p lib/release $NAME "$OPTIONS $OPT_RELEASE -flto" "$@" &
+			do_clang_impl $p $LIB_DIR/debug $NAME "$OPTIONS" "$@" &
+			do_clang_impl $p $LIB_DIR/release $NAME "$OPTIONS $OPT_RELEASE -flto" "$@" &
 		fi
 	done
 
